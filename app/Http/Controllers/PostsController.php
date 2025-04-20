@@ -8,7 +8,7 @@ class PostsController extends Controller
 {
         public function index()
     {
-        return view('index'); 
+        return view('posts.index'); 
     }
 	public function show()
     {

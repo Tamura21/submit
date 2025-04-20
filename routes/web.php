@@ -1,9 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PostsController;
+use App\Http\Controllers\PostController;
 
-Route::get('/show', [PostsController::class, 'show']);
-Route::get('/', [PostsController::class, 'index']);
-Route::get('/index', [PostsController::class, 'index']);
+Route::get('/', [PostController::class, 'index']);
+Route::get('/index', [PostController::class, 'index']);
+Route::get('/show', [PostController::class, 'show']); 
+Route::resource('posts', PostController::class);
+
 
