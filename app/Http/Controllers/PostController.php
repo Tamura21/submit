@@ -33,6 +33,7 @@ class PostController extends Controller{
 
     /*** Display the specified resource.*/
     public function show(Post $post){
+    \Log::info('編集画面表示時のPostデータ', ['post' => $post]);
         $authors = Author::all();
         return view('posts.show', compact('post', 'authors'));
     }
