@@ -5,55 +5,69 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\Author;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
-class PostController extends Controller{
-    /*** Display a listing of the resource.*/
-    public function index(){
+class PostController extends Controller
+{
+    /** 投稿一覧の表示 */
+    public function index()
+    {
         $posts = Post::with('author')->get();
         return view('posts.index', compact('posts'));
     }
 
-    /*** Show the form for creating a new resource.*/
-    public function create(){
+    /** 新規投稿フォームの表示 */
+    public function create()
+    {
         $authors = Author::all();
         return view('posts.create', compact('authors'));
     }
 
-    /*** Store a newly created resource in storage.*/
-    public function store(Request $request){
+    /** 投稿の保存処理 */
+    public function store(Request $request)
+    {
         $request->validate([
             'author_id' => 'required|integer',
-            'title' => 'required|string|max:255',
-            'content' => 'nullable|string',
+            'title'     => 'required|string|max:255',
+            'content'   => 'nullable|string',
         ]);
 
         Post::create($request->all());
         return redirect()->route('posts.index'); 
     }
 
-    /*** Display the specified resource.*/
-    public function show(Post $post){
-    \Log::info('編集画面表示時のPostデータ', ['post' => $post]);
+    /** 投稿の詳細表示 */
+    public function show(Post $post)
+    {
+        Log::info('[PostController@show] 詳細画面表示', ['post' => $post->toArray()]);
         $authors = Author::all();
         return view('posts.show', compact('post', 'authors'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Post $post){
+    /** 投稿の編集フォーム表示 */
+    public function edit(Post $post)
+    {
+        Log::info('[PostController@edit] 編集画面表示', ['post' => $post->toArray()]);
+        $authors = Author::all();
+        return view('posts.edit', compact('post', 'authors'));
+    }
+
+    /** 投稿の更新処理 */
+    public function update(Request $request, Post $post)
+    {
         $request->validate([
             'author_id' => 'required|integer',
-            'title' => 'required|string|max:255',
-            'content' => 'nullable|string',
+            'title'     => 'required|string|max:255',
+            'content'   => 'nullable|string',
         ]);
 
         $post->update($request->all());
         return redirect()->route('posts.index');
     }
 
-    /*** Remove the specified resource from storage.*/
-    public function destroy(Post $post){
+    /** 投稿の削除処理 */
+    public function destroy(Post $post)
+    {
         $post->delete();
         return redirect()->route('posts.index');
     }
