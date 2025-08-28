@@ -11,7 +11,7 @@ class UserRegistrationTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function user_can_register()
+    public function Q01_ユーザー新規登録が成功する()
     {
         $data = [
             'name' => 'テストユーザー',
@@ -22,12 +22,15 @@ class UserRegistrationTest extends TestCase
 
         $response = $this->post('/register', $data);
 
+        // DBにユーザーが保存されていることを確認
         $this->assertDatabaseHas('users', [
             'email' => 'test@example.com',
         ]);
 
-        $response->assertStatus(302);
+        // 登録後は /dashboard にリダイレクト
+        $response->assertRedirect('/dashboard');
 
+        // ユーザーがログイン状態になっていること
         $this->assertAuthenticated();
     }
 }
