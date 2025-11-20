@@ -33,25 +33,28 @@ class ProfileController extends Controller
         if ($request->hasFile('profile_image')) {
             // 古い画像を削除
             if ($user->profile_image) {
-                Storage::disk('public')->delete($user->profile_image);
+                // 先頭のスラッシュを除去してから削除
+                $old_path = ltrim($user->profile_image, '/');
+                Storage::disk('public')->delete($old_path);
             }
 
             // 新しい画像を保存
             $path = $request->file('profile_image')->store('profile_images', 'public');
-            $user->profile_image = $path;
+            // 先頭にスラッシュを付けて保存
+            $user->profile_image = '/' . $path;
         }
 
         // その他の情報を更新
-        $user->fill($request->validated());
+        $user->fill($request->except('profile_image'));
 
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
-        }
-
-        $user->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+    if ($user->isDirty('email')) {
+        $user->email_verified_at = null;
     }
+
+    $user->save();
+
+    return Redirect::route('profile.edit')->with('status', 'profile-updated');
+}
 
     /**
      * Delete the user's account.
@@ -66,7 +69,9 @@ class ProfileController extends Controller
 
         // プロフィール画像を削除
         if ($user->profile_image) {
-            Storage::disk('public')->delete($user->profile_image);
+            // 先頭のスラッシュを除去してから削除
+            $old_path = ltrim($user->profile_image, '/');
+            Storage::disk('public')->delete($old_path);
         }
 
         Auth::logout();

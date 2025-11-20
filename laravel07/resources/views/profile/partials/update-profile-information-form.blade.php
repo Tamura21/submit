@@ -23,62 +23,36 @@
                 {{-- 現在の画像表示 --}}
                 <div>
                     @if($user->profile_image)
-                        <img src="{{ asset('storage/' . $user->profile_image) }}" alt="プロフィール画像" class="w-24 h-24 rounded-full object-cover">
+                        <img src="{{ asset('storage' . $user->profile_image) }}" alt="プロフィール画像" class="w-24 h-24 rounded-full object-cover">
                     @else
                         {{-- デフォルト画像 --}}
                         <div class="w-24 h-24 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
-                            <svg class="w-12 h-12 text-gray-600 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                            <svg class="w-12 h-12 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
                         </div>
                     @endif
                 </div>
-
-                {{-- [3：画像選択ボタン] --}}
+                
+                {{-- ファイル選択 --}}
                 <div class="flex-1">
-                    <input 
-                        type="file" 
-                        name="profile_image" 
-                        id="fileProfileImage" 
-                        accept="image/*"
-                        class="block w-full text-sm text-gray-900 dark:text-gray-100 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 dark:border-gray-600 focus:outline-none"
-                    >
-                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">PNG, JPG, GIF (最大2MB)</p>
+                    <x-text-input id="profile_image" name="profile_image" type="file" class="mt-1 block w-full" accept="image/*" />
                     <x-input-error class="mt-2" :messages="$errors->get('profile_image')" />
                 </div>
             </div>
         </div>
 
-        {{-- [4：ユーザー名] 必須項目 --}}
+        {{-- ユーザー名 --}}
         <div>
-            <x-input-label for="txtName" value="ユーザー名" />
-            <span class="text-red-500 text-sm">*</span>
-            <x-text-input 
-                id="txtName" 
-                name="name" 
-                type="text" 
-                class="mt-1 block w-full" 
-                :value="old('name', $user->name)" 
-                required 
-                autofocus 
-                autocomplete="name" 
-            />
+            <x-input-label for="name" :value="__('Name')" />
+            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
-        {{-- [5：メールアドレス] 必須項目 --}}
+        {{-- メールアドレス --}}
         <div>
-            <x-input-label for="txtEmail" value="メールアドレス" />
-            <span class="text-red-500 text-sm">*</span>
-            <x-text-input 
-                id="txtEmail" 
-                name="email" 
-                type="email" 
-                class="mt-1 block w-full" 
-                :value="old('email', $user->email)" 
-                required 
-                autocomplete="username" 
-            />
+            <x-input-label for="email" :value="__('Email')" />
+            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
@@ -100,12 +74,8 @@
             @endif
         </div>
 
-        {{-- [6：登録ボタン] --}}
         <div class="flex items-center gap-4">
-            <a href="{{ route('tasks.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 focus:bg-gray-400 active:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                キャンセル
-            </a>
-            <x-primary-button id="btnSubmit">保存</x-primary-button>
+            <x-primary-button>{{ __('Save') }}</x-primary-button>
 
             @if (session('status') === 'profile-updated')
                 <p
@@ -114,7 +84,7 @@
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
                     class="text-sm text-gray-600 dark:text-gray-400"
-                >保存しました。</p>
+                >{{ __('Saved.') }}</p>
             @endif
         </div>
     </form>

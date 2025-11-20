@@ -9,7 +9,7 @@
             {{-- [1：ユーザーアイコン] --}}
             <div class="mr-4">
                 @if(Auth::user()->profile_image)
-                    <img src="{{ asset('storage/' . Auth::user()->profile_image) }}" alt="プロフィール画像" class="w-16 h-16 rounded-full object-cover">
+                    <img src="{{ asset('storage' . Auth::user()->profile_image) }}" alt="プロフィール画像" class="w-16 h-16 rounded-full object-cover">
                 @else
                     <div class="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
                         <svg class="w-8 h-8 text-gray-600 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20">
@@ -102,6 +102,7 @@
               絞り込み
          </button>
         </div>
+</form>
 
         @if($tasks->isEmpty())
             <p class="text-center text-gray-600 dark:text-gray-400 py-8">タスクはありません。</p>
